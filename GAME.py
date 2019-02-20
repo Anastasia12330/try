@@ -6,27 +6,29 @@ size = width, height = 600, 500 + 30
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('ЗВЕЗДНЫЕ ВОЙНЫ')
 
-#холст
+# холст
 window = pygame.Surface((width, height - 30))
 info_string = pygame.Surface((width, 30))
 screen2 = pygame.Surface(screen.get_size())
 pygame.display.flip()
 clock = pygame.time.Clock()
-pygame.time.set_timer(pygame.USEREVENT,20)
+pygame.time.set_timer(pygame.USEREVENT, 20)
 
-#определяем время исчезновения взрыва
+# определяем время исчезновения взрыва
 MOMENT = pygame.USEREVENT
-pygame.time.set_timer(MOMENT,2000)
+pygame.time.set_timer(MOMENT, 2000)
 
-#размер окна для сравнения при выходе за окно
+# размер окна для сравнения при выходе за окно
 screen_rect = (0, 0, width, height)
 GRAVITY = 1
+# gugbkbk
+
 
 global x_geroy, y_geroy, LIVE
 
 LIVE = 100
 x_geroy = width // 2
-y_geroy =height - 50
+y_geroy = height - 50
 
 
 def load_image(name):
@@ -38,6 +40,7 @@ def load_image(name):
         print('Cannot load image:', name)
         raise SystemExit(message)
     return image
+
 
 # создаем класс космических кораблей
 class Bomb(pygame.sprite.Sprite):
@@ -53,14 +56,13 @@ class Bomb(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = random.randint(x1, width - x1)
-        self.rect.y = 0#random.randrange(y1, height - y1)
+        self.rect.y = 0  # random.randrange(y1, height - y1)
         self.speed = 1
         self.kill()
         while pygame.sprite.spritecollideany(self, all_bombs):
             self.rect.x = random.randint(x1, width - x1)
-            self.rect.y = 0#random.randrange(y1, height - y1)
+            self.rect.y = 0  # random.randrange(y1, height - y1)
         all_bombs.add(self)
-
 
     def update(self):
         global LIVE
@@ -72,9 +74,9 @@ class Bomb(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, all_bullets):
             self.kill()
             create_particles((self.rect.x, self.rect.y))
-            #self.image = self.image_boom
-        elif self.rect.y < height-50:
-            #self.rect.x = self.rect.x + random.randint(-5, 5)
+            # self.image = self.image_boom
+        elif self.rect.y < height - 50:
+            # self.rect.x = self.rect.x + random.randint(-5, 5)
             self.rect.y += self.speed
         elif self.rect.y >= height - 50:
             self.kill()
@@ -87,6 +89,7 @@ class Bomb(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
     image = load_image("boom.png")
     image = pygame.transform.scale(image, (20, 20))
+
     def __init__(self, group, pos):
         super().__init__(group)
         self.image = Ball.image
@@ -109,10 +112,11 @@ class Ball(pygame.sprite.Sprite):
             create_particles((self.rect.x, self.rect.y))
             pass
 
-        #if self.rect.y < 10:
-            #self.kill()
+        # if self.rect.y < 10:
+        # self.kill()
 
-#создаем класс конец игры
+
+# создаем класс конец игры
 class GameOver(pygame.sprite.Sprite):
     def __init__(self, x, y, filename):
         super().__init__()
@@ -125,9 +129,10 @@ class GameOver(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x -= self.dx
-        #self.rect.y += self.dx
-        if self.rect.x == width - x_image_game_over:# and self.rect.y == height - y_image_game_over:
+        # self.rect.y += self.dx
+        if self.rect.x == width - x_image_game_over:  # and self.rect.y == height - y_image_game_over:
             self.dx = 0
+
 
 # создадим класс, разлетающугося взрыва
 class Particle(pygame.sprite.Sprite):
@@ -147,19 +152,20 @@ class Particle(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = pos
 
         # гравитация будет одинаковой (значение константы)
-        #self.gravity = GRAVITY
+        # self.gravity = GRAVITY
 
     def update(self):
         # применяем гравитационный эффект:
         # движение с ускорением под действием гравитации
-        #self.velocity[1] += self.gravity
-        #self.velocity[0] += self.gravity
+        # self.velocity[1] += self.gravity
+        # self.velocity[0] += self.gravity
         # перемещаем частицу
         self.rect.x += self.velocity[0]
         self.rect.y += self.velocity[1]
         # убиваем, если частица ушла за экран
         if not self.rect.colliderect(screen_rect):
             self.kill()
+
 
 def create_particles(position):
     # количество создаваемых частиц
@@ -169,7 +175,8 @@ def create_particles(position):
     for _ in range(particle_count):
         Particle(position, random.choice(numbers), random.choice(numbers))
 
-#функция перемещения героя
+
+# функция перемещения героя
 def move_geroy(keys):
     global x_geroy, y_geroy
 
@@ -194,6 +201,7 @@ def move_geroy(keys):
         else:
             y_geroy += 0
 
+
 # создадим группу, разлетающугося взрыва
 all_sprites = pygame.sprite.Group()
 
@@ -206,7 +214,7 @@ x1, y1 = bomb_image.get_rect().size
 # создадим группу, содержащую все шарики(пули)
 all_bullets = pygame.sprite.Group()
 
-#создаем героя
+# создаем героя
 sprite = pygame.sprite.Sprite()
 sprite.image = load_image("creature.png")
 sprite.image = pygame.transform.scale(sprite.image, (50, 50))
@@ -214,11 +222,11 @@ sprite.rect = sprite.image.get_rect()
 all_sprites1 = pygame.sprite.Group()
 
 # создадим спрайт
-#sprite = pygame.sprite.Sprite()
+# sprite = pygame.sprite.Sprite()
 # определим его вид
-#sprite.image = load_image("bomb.png")
+# sprite.image = load_image("bomb.png")
 # и размеры
-#sprite.rect = sprite.image.get_rect()
+# sprite.rect = sprite.image.get_rect()
 # добавим спрайт в группу
 all_sprites1.add(sprite)
 
@@ -235,7 +243,7 @@ running = True
 running_end = False
 running_begin = False
 running_game = False
-#screen.fill(pygame.Color('white'))
+# screen.fill(pygame.Color('white'))
 while running:
     screen.fill((255, 255, 255))
     screen.blit(image_begin, (0, 0))
@@ -244,7 +252,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame. K_RETURN:
+            if event.key == pygame.K_RETURN:
                 running_game = True
                 running = False
         # при нажатии правой мышкой конец игры
@@ -257,20 +265,20 @@ while running:
     while running_game:
         info_string.fill((45, 80, 45))
         screen.fill((255, 255, 255))
-        screen.blit(info_string, (0,0))
+        screen.blit(info_string, (0, 0))
         screen.blit(sprite.image, (x_geroy, y_geroy))
         clock.tick(50)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running_game = False
-                #running = True
+                # running = True
 
-            #появление кораблей через интервал
+            # появление кораблей через интервал
             if event.type == pygame.USEREVENT:
                 Bomb(all_bombs)
 
-            if event.type == pygame.MOUSEBUTTONDOWN:# выстрел
+            if event.type == pygame.MOUSEBUTTONDOWN:  # выстрел
                 if event.button == 1:
                     Ball(all_bullets, (x_geroy, y_geroy))
 
@@ -286,12 +294,12 @@ while running:
                     running_end = False
                     running = True
 
-        #for laser in all_bullets:
-            #hit_list = pygame.sprite.spritecollide(laser, all_bombs, False)
-            #for enemy in hit_list:
-                #all_bullets.remove(laser)
+        # for laser in all_bullets:
+        # hit_list = pygame.sprite.spritecollide(laser, all_bombs, False)
+        # for enemy in hit_list:
+        # all_bullets.remove(laser)
 
-        #движение героя
+        # движение героя
         keys = pygame.key.get_pressed()
         move_geroy(keys)
 
@@ -303,9 +311,7 @@ while running:
         all_sprites.update()
         all_sprites.draw(screen)
 
-
-
-        if LIVE == 0:# or pygame.sprite.spritecollideany(sprite.image_geroy, all_bombs, True) == 0:
+        if LIVE == 0:  # or pygame.sprite.spritecollideany(sprite.image_geroy, all_bombs, True) == 0:
             running_end = True
             running_game = False
             LIVE = 100
